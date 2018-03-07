@@ -20,7 +20,8 @@ public class MSModel {
     private int boardWidth;
     private int boardHeight;
     private Field model[][];
-    private int remainingTiles;
+    private int numHiddenTiles;
+    private int numUnflaggedMines;
 
     public static MSModel getInstance() {
         if(instance == null) {
@@ -33,8 +34,10 @@ public class MSModel {
         numMines = 3;
         boardWidth = 5;
         boardHeight = 5;
-        remainingTiles = boardHeight * boardWidth - numMines;
+        numHiddenTiles = boardHeight * boardWidth - numMines;
+        numUnflaggedMines = numMines;
         model = new Field[boardWidth][boardHeight];
+        gameStatus = GAME_IN_PROGESS;
         initBoard();
     }
 
@@ -66,7 +69,7 @@ public class MSModel {
         int numMines = 0;
         for (int k = -1; k < 2; k++) {
             for (int l = -1; l < 2; l++) {
-                if(i != 0 && j != 0) {
+                if(!(k == 0 && l == 0)) {
                     int adj_k = i + k;
                     int adj_l = j + l;
                     if(adj_k >= 0 && adj_k < boardWidth && adj_l >= 0 && adj_l < boardHeight) {
@@ -103,21 +106,60 @@ public class MSModel {
 
     public void setFieldRevealed(int i, int j) {
         model[i][j].setRevealed(true);
-        updateGameStatus(i,j);
+        updateGameStateReveal(i,j);
     }
 
-    private void updateGameStatus(int i, int j) {
+    private void updateGameStateReveal(int i, int j) {
         if(model[i][j].isMine()) {
             gameStatus = GAME_LOSE;
+        } else if(model[i][j].getNumAdjMines() == 0) {
+            depthFirstReveal(i, j);
         } else {
-            remainingTiles--;
-            if(remainingTiles == 0) {
-                gameStatus = GAME_WIN;
-            } else {
-                //TODO: implement breadth first board exploration
+            numHiddenTiles--;
+        }
+
+        if(numHiddenTiles == 0) {
+            gameStatus = GAME_WIN;
+        }
+    }
+
+    private void depthFirstReveal(int i, int j) {
+        model[i][j].setRevealed(true);
+        numHiddenTiles--;
+
+        if(model[i][j].getNumAdjMines() == 0) {
+            for (int k = -1; k < 2; k++) {
+                for (int l = -1; l < 2; l++) {
+                    if (!(k == 0 && l == 0)) {
+                        int adj_k = i + k;
+                        int adj_l = j + l;
+                        if (adj_k >= 0 && adj_k < boardWidth && adj_l >= 0 && adj_l < boardHeight &&
+                                !model[adj_k][adj_l].isRevealed()) {
+                            depthFirstReveal(adj_k, adj_l);
+                        }
+                    }
+                }
             }
         }
     }
+
+    public void setFieldFlagged(int i, int j) {
+        model[i][j].setFlagged(true);
+        updateGameStateFlag(i,j);
+    }
+
+    private void updateGameStateFlag(int i, int j) {
+        if(!model[i][j].isMine()) {
+            gameStatus = GAME_LOSE;
+        } else {
+            model[i][j].setFlagged(true);
+            numUnflaggedMines--;
+            if(numUnflaggedMines == 0) {
+                gameStatus = GAME_WIN;
+            }
+        }
+    }
+
 
     public int getGameStatus() {
         return gameStatus;

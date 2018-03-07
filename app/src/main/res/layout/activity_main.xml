@@ -18,6 +18,27 @@
         android:layout_height="300dp"
         android:padding="20dp" />
 
+    <RadioGroup
+        android:id="@+id/touchType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/reveal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mine"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/flag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/flag" />
+
+    </RadioGroup>
+
+
 
 
 </LinearLayout>

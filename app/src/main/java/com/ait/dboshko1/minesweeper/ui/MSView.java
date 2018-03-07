@@ -16,6 +16,7 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.ait.dboshko1.minesweeper.MainActivity;
 import com.ait.dboshko1.minesweeper.R;
 import com.ait.dboshko1.minesweeper.model.Field;
 import com.ait.dboshko1.minesweeper.model.MSModel;
@@ -115,13 +116,19 @@ public class MSView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            int i = (int) (event.getY() / (getHeight() / msBoardHeight));
-            int j = (int) (event.getX() / (getWidth() / msBoardWidth));
-            Log.d("touchEvent", "onTouchEvent: firing");
-            MSModel.getInstance().setFieldRevealed(i,j);
+        if(MSModel.getInstance().getGameStatus() == MSModel.GAME_IN_PROGESS) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                int i = (int) (event.getY() / (getHeight() / msBoardHeight));
+                int j = (int) (event.getX() / (getWidth() / msBoardWidth));
+                Log.d("touchEvent", "onTouchEvent: firing");
+                if(((MainActivity) getContext()).getRadioOption() == ((MainActivity) getContext()).getString(R.string.mine)) {
+                    MSModel.getInstance().setFieldRevealed(i, j);
+                } else {
+                    MSModel.getInstance().setFieldFlagged(i, j);
+                }
+            }
+            invalidate();
         }
-        invalidate();
         return super.onTouchEvent(event);
     }
 }
