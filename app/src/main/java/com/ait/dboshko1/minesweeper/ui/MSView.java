@@ -10,6 +10,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -129,16 +130,22 @@ public class MSView extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 int i = (int) (event.getY() / (getHeight() / msBoardHeight));
                 int j = (int) (event.getX() / (getWidth() / msBoardWidth));
-                if(((MainActivity) getContext()).getRadioOption() == ((MainActivity) getContext()).getString(R.string.reveal)) {
+                if(((MainActivity) getContext()).getRadioOption().equals(getContext().getString(R.string.reveal))) {
                     MSModel.getInstance().setFieldRevealed(i, j);
                 } else {
                     MSModel.getInstance().setFieldFlagged(i, j);
                 }
+                checkWin();
             }
             invalidate();
         }
         return super.onTouchEvent(event);
     }
+
+    private void checkWin() {
+        ((MainActivity) getContext()).checkWin();
+    }
+
 
     public void restartGame() {
         MSModel.getInstance().restartGame();

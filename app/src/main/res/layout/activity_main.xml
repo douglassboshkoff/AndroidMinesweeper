@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
+    android:id="@+id/layoutRoot"
     tools:context="com.ait.dboshko1.minesweeper.MainActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Minesweeper"/>
+        android:text="@string/minesweeper"/>
 
     <com.ait.dboshko1.minesweeper.ui.MSView
         android:id="@+id/msBoard"

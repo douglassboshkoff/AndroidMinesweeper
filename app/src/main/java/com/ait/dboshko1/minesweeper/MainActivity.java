@@ -1,5 +1,6 @@
 package com.ait.dboshko1.minesweeper;
 
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final MSView view = findViewById(R.id.msBoard);
-        Button restartBtn = (Button) findViewById(R.id.restartBtn);
+        Button restartBtn = findViewById(R.id.restartBtn);
         restartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -28,9 +29,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public String getRadioOption() {
-        RadioGroup radioGrp = (RadioGroup) findViewById(R.id.touchType);
-        RadioButton radioBtn = (RadioButton) findViewById(radioGrp.getCheckedRadioButtonId());
+        RadioGroup radioGrp = findViewById(R.id.touchType);
+        RadioButton radioBtn = findViewById(radioGrp.getCheckedRadioButtonId());
         return radioBtn.getText().toString();
+    }
+
+    public void checkWin() {
+        if(MSModel.getInstance().getGameStatus() == MSModel.GAME_WIN) {
+            Snackbar.make(findViewById(R.id.layoutRoot),
+                    "You have won! Press the restart button to play again!", Snackbar.LENGTH_SHORT).show();
+        } else if(MSModel.getInstance().getGameStatus() == MSModel.GAME_LOSE) {
+            Snackbar.make(findViewById(R.id.layoutRoot),
+                    "You lost :(. Press the restart button to play again!", Snackbar.LENGTH_SHORT).show();
+        }
     }
 
 }
