@@ -14,9 +14,16 @@
         android:text="Minesweeper"/>
 
     <com.ait.dboshko1.minesweeper.ui.MSView
+        android:id="@+id/msBoard"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:padding="20dp" />
+
+    <Button
+        android:id="@+id/restartBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/restart_game"/>
 
     <RadioGroup
         android:id="@+id/touchType"
@@ -27,7 +34,7 @@
             android:id="@+id/reveal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/mine"
+            android:text="@string/reveal"
             android:checked="true" />
 
         <RadioButton
@@ -37,6 +44,8 @@
             android:text="@string/flag" />
 
     </RadioGroup>
+
+
 
 
 

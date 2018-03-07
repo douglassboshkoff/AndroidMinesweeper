@@ -172,4 +172,11 @@ public class MSModel {
     public int getBoardHeight() {
         return boardHeight;
     }
+
+    public void restartGame() {
+        numHiddenTiles = boardHeight * boardWidth - numMines;
+        numUnflaggedMines = numMines;
+        gameStatus = GAME_IN_PROGESS;
+        initBoard();
+    }
 }

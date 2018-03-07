@@ -58,6 +58,7 @@ public class MSView extends View {
 
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        TileBitMap.initBitMaps(getContext(), getWidth() / msBoardWidth, getHeight() / msBoardHeight);
         bitmapMine = Bitmap.createScaledBitmap(bitmapMine, getWidth() / msBoardWidth,
                 getHeight() / msBoardHeight, false);
 
@@ -83,7 +84,7 @@ public class MSView extends View {
     private void drawTile(Canvas canvas, int i, int j) {
         Field f = MSModel.getInstance().getFieldContent(i,j);
         if(!f.isRevealed()) {
-            drawHiddenTile(canvas, i, j);
+            drawHiddenTile(canvas, i, j, f);
         } else {
             drawRevealedTile(canvas, i, j, f);
         }
@@ -91,27 +92,35 @@ public class MSView extends View {
 
     private void drawRevealedTile(Canvas canvas, int i, int j, Field f) {
         if(f.isMine()) {
-            int padding = Math.max(1, (getHeight() / msBoardHeight) / 50);
-            RectF square = new RectF(j * (getWidth() / msBoardWidth) + padding, i * (getHeight() / msBoardHeight) + padding,
-                    (j + 1) * (getWidth() / msBoardWidth) - padding, (i + 1) * (getHeight() / msBoardHeight) - padding);
-            canvas.drawBitmap(bitmapMine, null, square, null);
+//            int padding = Math.max(1, (getHeight() / msBoardHeight) / 50);
+//            RectF square = new RectF(j * (getWidth() / msBoardWidth) + padding, i * (getHeight() / msBoardHeight) + padding,
+//                    (j + 1) * (getWidth() / msBoardWidth) - padding, (i + 1) * (getHeight() / msBoardHeight) - padding);
+
+            Bitmap tile = TileBitMap.getIconTile(TileBitMap.TileType.MINE);
+            canvas.drawBitmap(bitmapMine, j * (getWidth() / msBoardWidth), i * (getHeight() / msBoardHeight), null);
         } else {
             int numMines = f.getNumAdjMines();
-            if(numMines > 0) {
-                canvas.drawText(Integer.toString(numMines),
-                        j * (getWidth() / msBoardWidth) + (getWidth() / msBoardWidth) * 0.25f,
-                        i * (getHeight() / msBoardHeight) + (getHeight() / msBoardHeight) * 0.5f
-                        , paintNumber);
-            }
+//            if(numMines > 0) {
+//                canvas.drawText(Integer.toString(numMines),
+//                        j * (getWidth() / msBoardWidth) + (getWidth() / msBoardWidth) * 0.25f,
+//                        i * (getHeight() / msBoardHeight) + (getHeight() / msBoardHeight) * 0.5f
+//                        , paintNumber);
+                Bitmap tile = TileBitMap.getNumberTile(numMines);
+                canvas.drawBitmap(tile, j * (getWidth() / msBoardWidth), i * (getHeight() / msBoardHeight), null);
+//            }
         }
     }
 
-    private void drawHiddenTile(Canvas canvas, int i, int j) {
-        int padding = Math.max(1,(getHeight() / msBoardHeight) / 50);
-        RectF square = new RectF(j * (getWidth() / msBoardWidth) + padding, i * (getHeight() / msBoardHeight) + padding,
-                (j + 1) * (getWidth() / msBoardWidth) - padding, (i + 1) * (getHeight() / msBoardHeight) - padding);
+    private void drawHiddenTile(Canvas canvas, int i, int j, Field f) {
+//        int padding = Math.max(1,(getHeight() / msBoardHeight) / 50);
+//        RectF square = new RectF(j * (getWidth() / msBoardWidth) + padding, i * (getHeight() / msBoardHeight) + padding,
+//                (j + 1) * (getWidth() / msBoardWidth) - padding, (i + 1) * (getHeight() / msBoardHeight) - padding);
+        TileBitMap.TileType type = (f.isFlagged()) ? TileBitMap.TileType.FLAG :TileBitMap.TileType.HIDDEN_TILE;
 
-        canvas.drawRoundRect(square, 15, 15, paintHiddenTile);
+        Bitmap tile = TileBitMap.getIconTile(type);
+
+//        canvas.drawRoundRect(square, 15, 15, paintHiddenTile);
+        canvas.drawBitmap(tile, j * (getWidth() / msBoardWidth), i * (getHeight() / msBoardHeight), null);
     }
 
     @Override
@@ -120,8 +129,7 @@ public class MSView extends View {
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 int i = (int) (event.getY() / (getHeight() / msBoardHeight));
                 int j = (int) (event.getX() / (getWidth() / msBoardWidth));
-                Log.d("touchEvent", "onTouchEvent: firing");
-                if(((MainActivity) getContext()).getRadioOption() == ((MainActivity) getContext()).getString(R.string.mine)) {
+                if(((MainActivity) getContext()).getRadioOption() == ((MainActivity) getContext()).getString(R.string.reveal)) {
                     MSModel.getInstance().setFieldRevealed(i, j);
                 } else {
                     MSModel.getInstance().setFieldFlagged(i, j);
@@ -130,5 +138,10 @@ public class MSView extends View {
             invalidate();
         }
         return super.onTouchEvent(event);
+    }
+
+    public void restartGame() {
+        MSModel.getInstance().restartGame();
+        invalidate();
     }
 }
