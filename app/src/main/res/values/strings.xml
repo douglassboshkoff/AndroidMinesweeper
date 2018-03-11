@@ -4,4 +4,6 @@
     <string name="flag">Flag</string>
     <string name="restart_game">Restart Game</string>
     <string name="minesweeper">Minesweeper</string>
+    <string name="win_message">You have won! Press the restart button to play again!</string>
+    <string name="lose_message">You lost :(. Press the restart button to play again!</string>
 </resources>

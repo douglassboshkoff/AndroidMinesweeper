@@ -14,7 +14,7 @@ public class MSModel {
 
     public static final int GAME_WIN = 0;
     public static final int GAME_LOSE = 1;
-    public static final int GAME_IN_PROGESS = 2;
+    public static final int GAME_IN_PROGRESS = 2;
 
     private int numMines;
     private int boardWidth;
@@ -37,7 +37,7 @@ public class MSModel {
         numHiddenTiles = boardHeight * boardWidth - numMines;
         numUnflaggedMines = numMines;
         model = new Field[boardWidth][boardHeight];
-        gameStatus = GAME_IN_PROGESS;
+        gameStatus = GAME_IN_PROGRESS;
         initBoard();
     }
 
@@ -92,7 +92,7 @@ public class MSModel {
 
     @NonNull
     private List<Integer> getRandomMines() {
-        List<Integer> mines = new ArrayList<Integer>();
+        List<Integer> mines = new ArrayList<>();
         for (int i = 0; i < boardHeight * boardWidth; i++) {
             mines.add(i);
         }
@@ -112,6 +112,7 @@ public class MSModel {
     private void updateGameStateReveal(int i, int j) {
         if(model[i][j].isMine()) {
             gameStatus = GAME_LOSE;
+            revealMines();
         } else if(model[i][j].getNumAdjMines() == 0) {
             depthFirstReveal(i, j);
         } else {
@@ -120,6 +121,16 @@ public class MSModel {
 
         if(numHiddenTiles == 0) {
             gameStatus = GAME_WIN;
+        }
+    }
+
+    private void revealMines() {
+        for (int i = 0; i < boardWidth; i++) {
+            for (int j = 0; j < boardHeight; j++) {
+                if(model[i][j].isMine() && !model[i][j].isFlagged()) {
+                    model[i][j].setRevealed(true);
+                }
+            }
         }
     }
 
@@ -151,6 +162,7 @@ public class MSModel {
     private void updateGameStateFlag(int i, int j) {
         if(!model[i][j].isMine()) {
             gameStatus = GAME_LOSE;
+            revealMines();
         } else {
             model[i][j].setFlagged(true);
             numUnflaggedMines--;
@@ -176,7 +188,7 @@ public class MSModel {
     public void restartGame() {
         numHiddenTiles = boardHeight * boardWidth - numMines;
         numUnflaggedMines = numMines;
-        gameStatus = GAME_IN_PROGESS;
+        gameStatus = GAME_IN_PROGRESS;
         initBoard();
     }
 }
