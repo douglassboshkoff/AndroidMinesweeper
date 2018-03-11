@@ -24,7 +24,7 @@ public class TileBitMap {
     private static Bitmap hiddenTile;
 
     public enum TileType {
-        FLAG, MINE, HIDDEN_TILE;
+        FLAG, MINE, HIDDEN_TILE
     }
 
     private TileBitMap() {
@@ -83,6 +83,4 @@ public class TileBitMap {
         }
         return tile;
     }
-
-
 }

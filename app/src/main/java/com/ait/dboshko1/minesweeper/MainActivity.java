@@ -37,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
     public void checkWin() {
         if(MSModel.getInstance().getGameStatus() == MSModel.GAME_WIN) {
             Snackbar.make(findViewById(R.id.layoutRoot),
-                    "You have won! Press the restart button to play again!", Snackbar.LENGTH_SHORT).show();
+                    R.string.win_message, Snackbar.LENGTH_SHORT).show();
         } else if(MSModel.getInstance().getGameStatus() == MSModel.GAME_LOSE) {
             Snackbar.make(findViewById(R.id.layoutRoot),
-                    "You lost :(. Press the restart button to play again!", Snackbar.LENGTH_SHORT).show();
+                    R.string.lose_message, Snackbar.LENGTH_SHORT).show();
         }
     }
 
