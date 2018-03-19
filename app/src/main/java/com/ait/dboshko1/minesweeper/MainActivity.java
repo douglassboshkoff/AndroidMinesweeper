@@ -38,9 +38,11 @@ public class MainActivity extends AppCompatActivity {
         if(MSModel.getInstance().getGameStatus() == MSModel.GAME_WIN) {
             Snackbar.make(findViewById(R.id.layoutRoot),
                     R.string.win_message, Snackbar.LENGTH_SHORT).show();
+            MSModel.getInstance();
         } else if(MSModel.getInstance().getGameStatus() == MSModel.GAME_LOSE) {
             Snackbar.make(findViewById(R.id.layoutRoot),
                     R.string.lose_message, Snackbar.LENGTH_SHORT).show();
+            MSModel.getInstance();
         }
     }
 

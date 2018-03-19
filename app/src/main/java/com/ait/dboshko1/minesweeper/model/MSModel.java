@@ -105,8 +105,10 @@ public class MSModel {
     }
 
     public void setFieldRevealed(int i, int j) {
-        model[i][j].setRevealed(true);
-        updateGameStateReveal(i,j);
+        if(!model[i][j].isRevealed()) {
+            model[i][j].setRevealed(true);
+            updateGameStateReveal(i, j);
+        }
     }
 
     private void updateGameStateReveal(int i, int j) {
